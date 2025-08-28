@@ -21,3 +21,14 @@ Tamsayılar uygun değer aralığında ise 64-bit sabit hassasiyetli *(fixed pre
 Küsüratlı *(kayan noktalı/floating point)* değerler çift-hassasiyetli, yahut **M** soneki ile isteğe göre hassasiyetli 64-bit *float*lar olarak okunur. Üslü yazım *(exponential notation)* ayrıca desteklenir. ##Inf,##-Inf ve ##NaN  özel sembolleri sırası ile artı sonsuz, eksi sonsuz ve "sayı değil" değerlerini temsil eder.
 
 #### Karakter tipleri
+
+```
+"hello"   ; string
+\e        ; character
+#"[0-9]+" ; regular expression
+```
+
+Metin değerleri *(string)* çift tırnak içinde yazılır ve birden fazla satır alabilir. Tek karakterler ters eğik çizgi *(backslash)* ile temsil edilir. Özel isimli birkaç karakter: `\newline` `\space` `\tab` vs. Unicode karakterler `\uNNNN` veya `\oNNN` gibi sekizli olarak temsil edilebilir.
+
+Düzenli ifadeler *(literal regular expressions)* # ile başlayan metinler olarak yazılır. Bunlar java.util.regex.Pattern nesnelerine çevrilirler.
+
