@@ -32,3 +32,15 @@ Metin değerleri *(string)* çift tırnak içinde yazılır ve birden fazla sat�
 
 Düzenli ifadeler *(literal regular expressions)* # ile başlayan metinler olarak yazılır. Bunlar java.util.regex.Pattern nesnelerine çevrilirler.
 
+#### Semboller ve İsimler
+
+```
+map             ; symbol
++               ; symbol - most punctuation allowed
+clojure.core/+  ; namespaced symbol
+nil             ; null value
+true false      ; booleans
+:alpha          ; keyword
+:release/alpha  ; keyword with namespace
+```
+
