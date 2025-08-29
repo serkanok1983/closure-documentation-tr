@@ -44,3 +44,94 @@ true false      ; booleans
 :release/alpha  ; keyword with namespace
 ```
 
+Semboller harf, sayı ve noktalama işaretlerinden oluşturulur ve fonksiyon, değer, ad uzayı *(namespace)* gibi bir başka nesneye işaret etmek *(refer to)* için kullanılırlar. Sembollerin ait olduğu ad uzayları da bir slash ile birlikte sembol isminde belirtilebilir.
+
+Farklı değer tipleri olarak okunan üç özel sembol vardır - ==nil== boş değer *(null value)*, ==true== ve ==false== ise mantıksal *(boolean)* değerlerdir.
+
+Anahtar kelimeler iki nokta üst üste ile başlar ve değer olarak kendilerini döndürürler. Clojure'da genellikle sıralama veya öznitelik değerleri *(enumerated values / attribute values)* olarak kullanılırlar.
+
+#### Koleksiyonlar *(Literal collections)*
+
+Clojure söz diziminde dört koleksiyon tipini de yazabiliyoruz:
+
+```
+'(1 2 3)      ; list
+[1 2 3]       ; vector
+#{1 2 3}      ; set
+{:a 1, :b 2}  ; map
+```
+
+Şu aşamada bu dört veri yapısını birleşik veri üretmek için kullanabileceğimizi bilmemiz yeterlidir.
+
+### İşleme *(Evaluation)*
+
+Clojure'un ifadeleri *(expressions)* nasıl okuyup değerlere dönüştürdüğünü *(evaluation)* inceleyelim.
+
+#### Geleneksel İşleme (Java)
+
+```mermaid
+flowchart LR
+    SC["Source Code"]:::plain
+    C(["Compiler"]):::proc
+    JVM(["JVM"]):::vm
+    E((Effect)):::eff
+
+    %% oklar
+    SC -- characters --> C
+    C  -- bytecode   --> JVM
+    JVM --> E
+
+    %% üst not
+    CU["compilation unit = file or class"]:::note
+    CU -.-> C
+
+    %% stiller
+    classDef plain fill:#ffffff,stroke:#666,stroke-width:1px,color:#111;
+    classDef proc  fill:#e9f0ff,stroke:#3a7,stroke-width:1px,color:#111;
+    classDef vm    fill:#fff1d6,stroke:#b88,stroke-width:1px,color:#111;
+    classDef eff   fill:#ffe6f5,stroke:#c06,stroke-width:3px,color:#111;
+    classDef note  fill:transparent,stroke:transparent,color:#777,font-size:12px;
+  ```
+Java'da, kaynak kodu (.java uzantılı dosyalar) derleyici (javac) tarafından karakterler olarak okunur ve Java Sanal Makinesi (JVM) tarafından işlenebilen bytecode'a (.class uzantılı dosyalar) dönüştürülür.
+
+#### Clojure'da İşleme
+
+```mermaid
+flowchart LR
+    SC["Source Code"]:::plain
+    R(["Reader"]):::reader
+    C(["Compiler"]):::proc
+    JVM(["JVM"]):::vm
+    E((Effect)):::eff
+    U((You)):::you
+
+    %% oklar
+    SC -- characters --> R
+    R  -- data structures --> C
+    C  -- bytecode        --> JVM
+    JVM --> E
+    U -.-> R
+
+    %% üst not
+    CU["compilation unit = expression"]:::note
+    CU -.-> R
+
+    %% stiller
+    classDef plain  fill:#ffffff,stroke:#666,stroke-width:1px,color:#111;
+    classDef reader fill:#e7ffef,stroke:#2a6,stroke-width:1px,color:#111;
+    classDef proc   fill:#e9f0ff,stroke:#3a7,stroke-width:1px,color:#111;
+    classDef vm     fill:#fff1d6,stroke:#b88,stroke-width:1px,color:#111;
+    classDef eff    fill:#ffe6f5,stroke:#c06,stroke-width:3px,color:#111;
+    classDef you    fill:#f3f3f3,stroke:#888,stroke-width:1px,color:#111;
+    classDef note   fill:transparent,stroke:transparent,color:#777,font-size:12px;
+```
+
+Clojure'da, kaynak kodu Okuyucu tarafından karakter karakter okunur. Okuyucu kaynağı .clj uzantılı dosyalardan yahut etkileşimli olarak *(interactively)* ifade serileri şeklinde okuyabilir. Okuyucu Clojure verisi üretir. Ardından Clojure derleyicisi JVM için bytecode'u üretir.
+
+Burada iki önemli nokta var:
+
+1. Kaynak kodunun ölçü birimi **Clojure ifadesi** olup, Clojure kaynak dosyası değildir. Kaynak dosyaları da REPL'de etkileşimli olarak girilmiş Clojure ifadelerinden farksız olarak ifade dizileri biçiminde okunur.
+2. Okuyucu ve Derleyiciyi bu şekilde ayırmak makrolara yer açan bir yaklaşımdır. Makrolar (veri olarak) kod alıp (veri olarak) kod üreten özel fonksiyonlardır. Yukarıdaki veri işleme modelinde makro genişlemesi için bir döngünün nereye eklenebileceğini fark ettiniz mi?
+
+#### Yapı ve Anlam *(Structure vs Semantics)*
+ 

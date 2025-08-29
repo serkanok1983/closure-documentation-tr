@@ -6,7 +6,7 @@
       <link rel="stylesheet" href="file:////Users/serkanok/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.8.19/crossnote/dependencies/katex/katex.min.css">
       
       
-      
+      <script type="text/javascript" src="file:////Users/serkanok/.vscode/extensions/shd101wyy.markdown-preview-enhanced-0.8.19/crossnote/dependencies/mermaid/mermaid.min.js" charset="UTF-8"></script>
       
       
       <style>
@@ -41,13 +41,119 @@
 #"[0-9]+" ; regular expression
 </code></pre><p>Metin değerleri <em>(string)</em> çift tırnak içinde yazılır ve birden fazla satır alabilir. Tek karakterler ters eğik çizgi <em>(backslash)</em> ile temsil edilir. Özel isimli birkaç karakter: <code>\newline</code> <code>\space</code> <code>\tab</code> vs. Unicode karakterler <code>\uNNNN</code> veya <code>\oNNN</code> gibi sekizli olarak temsil edilebilir.</p>
 <p>Düzenli ifadeler <em>(literal regular expressions)</em> # ile başlayan metinler olarak yazılır. Bunlar java.util.regex.Pattern nesnelerine çevrilirler.</p>
+<h4 id="semboller-ve-i̇simler">Semboller ve İsimler </h4>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>map             ; symbol
++               ; symbol - most punctuation allowed
+clojure.core/+  ; namespaced symbol
+nil             ; null value
+true false      ; booleans
+:alpha          ; keyword
+:release/alpha  ; keyword with namespace
+</code></pre><p>Semboller harf, sayı ve noktalama işaretlerinden oluşturulur ve fonksiyon, değer, ad uzayı <em>(namespace)</em> gibi bir başka nesneye işaret etmek <em>(refer to)</em> için kullanılırlar. Sembollerin ait olduğu ad uzayları da bir slash ile birlikte sembol isminde belirtilebilir.</p>
+<p>Farklı değer tipleri olarak okunan üç özel sembol vardır - <mark>nil</mark> boş değer <em>(null value)</em>, <mark>true</mark> ve <mark>false</mark> ise mantıksal <em>(boolean)</em> değerlerdir.</p>
+<p>Anahtar kelimeler iki nokta üst üste ile başlar ve değer olarak kendilerini döndürürler. Clojure'da genellikle sıralama veya öznitelik değerleri <em>(enumerated values / attribute values)</em> olarak kullanılırlar.</p>
+<h4 id="koleksiyonlar-literal-collections">Koleksiyonlar <em>(Literal collections)</em> </h4>
+<p>Clojure söz diziminde dört koleksiyon tipini de yazabiliyoruz:</p>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>'(1 2 3)      ; list
+[1 2 3]       ; vector
+#{1 2 3}      ; set
+{:a 1, :b 2}  ; map
+</code></pre><p>Şu aşamada bu dört veri yapısını birleşik veri üretmek için kullanabileceğimizi bilmemiz yeterlidir.</p>
+<h3 id="i̇şleme-evaluation">İşleme <em>(Evaluation)</em> </h3>
+<p>Clojure'un ifadeleri <em>(expressions)</em> nasıl okuyup değerlere dönüştürdüğünü <em>(evaluation)</em> inceleyelim.</p>
+<h4 id="geleneksel-i̇şleme-java">Geleneksel İşleme (Java) </h4>
+<div class="mermaid">flowchart LR
+    SC["Source Code"]:::plain
+    C(["Compiler"]):::proc
+    JVM(["JVM"]):::vm
+    E((Effect)):::eff
 
+    %% oklar
+    SC -- characters --&gt; C
+    C  -- bytecode   --&gt; JVM
+    JVM --&gt; E
+
+    %% üst not
+    CU["compilation unit = file or class"]:::note
+    CU -.-&gt; C
+
+    %% stiller
+    classDef plain fill:#ffffff,stroke:#666,stroke-width:1px,color:#111;
+    classDef proc  fill:#e9f0ff,stroke:#3a7,stroke-width:1px,color:#111;
+    classDef vm    fill:#fff1d6,stroke:#b88,stroke-width:1px,color:#111;
+    classDef eff   fill:#ffe6f5,stroke:#c06,stroke-width:3px,color:#111;
+    classDef note  fill:transparent,stroke:transparent,color:#777,font-size:12px;
+</div><h4 id="clojureda-i̇şleme">Clojure'da İşleme </h4>
+<div class="mermaid">flowchart LR
+    SC["Source Code"]:::plain
+    R(["Reader"]):::reader
+    C(["Compiler"]):::proc
+    JVM(["JVM"]):::vm
+    E((Effect)):::eff
+    U((You)):::you
+
+    %% oklar
+    SC -- characters --&gt; R
+    R  -- data structures --&gt; C
+    C  -- bytecode        --&gt; JVM
+    JVM --&gt; E
+    U -.-&gt; R
+
+    %% üst not
+    CU["compilation unit = expression"]:::note
+    CU -.-&gt; R
+
+    %% stiller
+    classDef plain  fill:#ffffff,stroke:#666,stroke-width:1px,color:#111;
+    classDef reader fill:#e7ffef,stroke:#2a6,stroke-width:1px,color:#111;
+    classDef proc   fill:#e9f0ff,stroke:#3a7,stroke-width:1px,color:#111;
+    classDef vm     fill:#fff1d6,stroke:#b88,stroke-width:1px,color:#111;
+    classDef eff    fill:#ffe6f5,stroke:#c06,stroke-width:3px,color:#111;
+    classDef you    fill:#f3f3f3,stroke:#888,stroke-width:1px,color:#111;
+    classDef note   fill:transparent,stroke:transparent,color:#777,font-size:12px;
+</div>
       </div>
       
       
     
     
-    
+    <script type="module">
+// TODO: If ZenUML gets integrated into mermaid in the future,
+//      we can remove the following lines.
+
+
+var MERMAID_CONFIG = ({"startOnLoad":false});
+if (typeof MERMAID_CONFIG !== 'undefined') {
+  MERMAID_CONFIG.startOnLoad = false
+  MERMAID_CONFIG.cloneCssStyles = false
+  MERMAID_CONFIG.theme = "default"
+}
+
+mermaid.initialize(MERMAID_CONFIG || {})
+if (typeof(window['Reveal']) !== 'undefined') {
+  function mermaidRevealHelper(event) {
+    var currentSlide = event.currentSlide
+    var diagrams = currentSlide.querySelectorAll('.mermaid')
+    for (var i = 0; i < diagrams.length; i++) {
+      var diagram = diagrams[i]
+      if (!diagram.hasAttribute('data-processed')) {
+        mermaid.init(null, diagram, ()=> {
+          Reveal.slide(event.indexh, event.indexv)
+        })
+      }
+    }
+  }
+  Reveal.addEventListener('slidetransitionend', mermaidRevealHelper)
+  Reveal.addEventListener('ready', mermaidRevealHelper)
+  await mermaid.run({
+    nodes: document.querySelectorAll('.mermaid')
+  })
+} else {
+  await mermaid.run({
+    nodes: document.querySelectorAll('.mermaid')
+  })
+}
+</script>
     
     
     
