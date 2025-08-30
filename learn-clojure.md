@@ -137,7 +137,7 @@ Burada iki önemli nokta var:
 
 Bir Clojure ifadesini ele alalım:
 
-![](clojure-expression.svg)
+![](clojure-expression(2).svg)
 
 Bu diyagram yeşil renkli sözdizimi (Okuyucu tarafından üretilen Closure veri yapısı) ve mavi renkli anlam (Closure çalışma zamanı *(runtime)* tarafından verinin nasıl anlaşıldığı) farkını göstermektedir.
 
