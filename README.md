@@ -137,10 +137,185 @@ Burada iki önemli nokta var:
 
 Bir Clojure ifadesini ele alalım:
 
-![](clojure-expression(2).svg)
+![](clojure-expression.svg)
 
 Bu diyagram yeşil renkli sözdizimi (Okuyucu tarafından üretilen Closure veri yapısı) ve mavi renkli anlam (Closure çalışma zamanı *(runtime)* tarafından verinin nasıl anlaşıldığı) farkını göstermektedir.
 
 Çoğu yazılı Clojure formu kendilerini döndürürler, **semboller** ve **listeler** hariç. Semboller başka bir şeye atıf için kullanılır ve işlendiklerinde, atıfta bulundukları nesneyi döndürürler. Listeler (diyagramda olduğu gibi) çağrı *(invocation)* olarak işlenir.
 
-Diyagramda, (+ 3 4) ifadesi (+) sembolü ve iki sayıyı (3 ve 4) içeren bir liste olarak okunur. 
+Diyagramda, (+ 3 4) ifadesi (+) sembolü ve iki sayıyı (3 ve 4) içeren bir liste olarak okunur. İlk öğeye (+ işaretinin bulunduğu) "fonksiyon konumu" denebilir, çağrılacak nesne için buraya bakılır. Çağrılabilir şeylerin başında fonksiyonlar gelmekle birlikte, makrolar ve bir kaç diğer nesne gibi çalışma zamanının bildiği özel operatörler de vardır.
+
+Yukarıdaki ifadenin işlenişini ele alalım:
+
+* 3 ve 4 kendilerini döndürür (long değerler)
+* + sembolü + işlemini uygulayan bir fonksiyon döndürür
+* listenin işlenmesi + fonksiyonunun 3 ve 4'ü argüman alarak çağrılması ile sonuçlanır.
+
+Çoğu dilde hem bildirim *(statements)* hem ifadeler *(expressions)* vardır, bildirimler program durumunu etkilerken *(stateful effect)* değer döndürmezler. Clojure'da, her şey değer döndüren ifade cinsindendir. Bazı ifadelerin (çoğunun değil) yan etkileri de olur.
+
+Şimdi Clojure'da etkileşimli olarak nasıl ifade işleyebileceğimize bakalım.
+
+#### Kesme işareti ile işleme erteleme
+
+Bazen özellikle semboller ve listelerin işlenmemesi kullanışlı olur. Bir sembolün atıf yaptığı şeye bakmadan sembolün kendisini almak gerekebilir.
+
+```
+user=> 'x
+x
+```
+
+Bazen de bir listenin işletilecek kod değil veri değerlerinden oluşan bir liste olması gerekir.
+
+```
+user=> '(1 2 3)
+(1 2 3)
+```
+
+Kesme işaretini unutursanız veri listesi kod gibi işlenemeyeceği için kafa karıştırıcı bir hata alırsınız:
+
+```
+user=> (1 2 3)
+Execution error (ClassCastException) at user/eval156 (REPL:1).
+class java.lang.Long cannot be cast to class clojure.lang.IFn
+```
+
+Şimdilik kesme işaretini çok düşünmeyin, ancak bu içerikte sembol ve listelerin işlenmesinden kaçınmak için kullanıldığını görebilirsiniz.
+
+### REPL
+
+Clojure kullandığını zamanın çoğunluğunda bir editörde veya REPL'de (*Read-Eval-Print-Loop* Oku-İşle-Yaz-Döngüsü) çalışacaksınız. REPL aşağıdaki parçalardan oluşur:
+
+1. Clojure verisi üretmek üzere bir ifadeyi (karakter dizisi olarak) oku.
+2. 1 numaralı işlemden döndürülen veriyi işle ve (Clojure verisi olarak) bir sonuç üret.
+3. Üretilen sonucu veriden karaktere çevirerek yazdır.
+4. Başa dön.
+
+2 numaralı işlemde önemli bir nokta şudur, Clojure bir ifadeyi yürütmeden *(execute)* evvel muhakkak derler *(compile)*; Clojure **her zaman** JVM bytecode'a derlenir. Clojure yorumlayıcısı yoktur.
+
+```
+user=> (+ 3 4)
+7
+```
+
+Yukarıdaki örnekte bir ifadenin (+ 3 4) derlenerek bir sonuç alınmasını görüyorsunuz.
+
+#### REPL'de Keşfe Çıkmak
+
+Çoğu REPL ortamı etkileşimli kullanımı kolaylaştırmak için bazı destekler sunar. Örneğin, birkaç özel sembol ile son üç ifadenin işleme sonuçlarını hatırlayabilir:
+
+* `*1` (son sonuç)
+* `*2` (iki ifade önceki sonuç)
+* `*3` (üç ifade önceki sonuç)
+
+```
+user=> (+ 3 4)
+7
+user=> (+ 10 *1)
+17
+user=> (+ *1 *2)
+24
+```
+
+İlaveten standart Clojure kütüphanesinde dahili olarak bulunan `clojure.repl` ad uzayı çok sayıda yardımcı fonksiyon sağlamaktadır. Bu kütüphaneyi yükleyerek içinde bulunan fonksiyonları mevcut bağlamımızda *(context)* kullanabilmek için şu çağrıyı yaparız:
+
+```
+(require '[clojure.repl :refer :all])
+```
+
+Şimdi REPL ortamında kullanışlı bazı ilave fonksiyonlara erişimimiz var: `doc`, `find-doc`, `\apropos`, `source` ve `dir`.
+
+`doc` fonksiyonu bir fonksiyonun dökümantasyonunu görüntüler. `+` üzerinde çağıralım:
+
+```
+user=> (doc +)
+
+clojure.core/+
+([] [x] [x y] [x y & more])
+  Returns the sum of nums. (+) returns 0. Does not auto-promote longs, will throw on overflow. See also: +'
+```
+
+`doc`fonksiyonu `+`'nın dökümantasyonunu geçerli fonksiyon imzaları dahil ekrana yazar.
+
+Doc fonksiyonu dökümantasyon yazdıktan sonra değer olarak nil döndürür, işleme çıktısı *(evaluation output)* olarak ger ikisini de görürsünüz.
+
+`doc`'u kendi üzerinde de çağırabiliriz:
+
+```
+user=> (doc doc)
+
+clojure.repl/doc
+([name])
+Macro
+  Prints documentation for a var or special form given its name
+```
+
+Neyin çağıracağımızdan emin olmadığımızda, belli bir metin yahut düzenli idadeyle eşleşen fonksiyonları bulmak için `\apropos`komutunu kullanabiliriz.
+
+```
+user=> (apropos "+")
+(clojure.core/+ clojure.core/+')
+```
+
+`find-doc` ile aramamızı dökümantasyon metinlerini *(docstring)* içerecek şekilde genişletebiliriz:
+
+```
+user=> (find-doc "trim")
+
+clojure.core/subvec
+([v start] [v start end])
+  Returns a persisten vector of the items in vector from start (inclusive) to end (exclusive). If end is not supplied, defaults to (count vector). This operation is O(1) and very fast, as the resulting vector shares structure with the original and no trimming is done.
+
+clojure.string/trim
+([s])
+  Removes whitespace from both ends of string.
+
+clojure.string/trim-newline
+([s])
+  Removes all trailing newline \n or return \r characters from string. Similar to Perl's chomp.
+
+clojure.string/triml
+([s])
+  Removes whitespace from the left side of string.
+
+clojure.string/trimr
+([s])
+  Removes whitespace from the right side of string.
+```
+
+Belli bir aduzayında yer alan tüm fonksiyonların listesini görmek istediğimizde, `dir` foksiyonunu kullanabiliriz. Burada `clojure.repl` aduzayında kullanalım:
+
+```
+user=> (dir clojure.repl)
+
+apropos
+demunge
+dir
+dir-fn
+doc
+find-doc
+pst
+root-cause
+set-break-handler!
+source
+source-fn
+stack-element-str
+thread-stopper
+```
+
+Ve son olarak, çalışma zamanı tarafında erilişebilen herhangi bir fonksiyonun yalnızca dökümantasyonunu değil, kaynak kodunu da görebiliriz:
+
+```
+user=> (source dir)
+
+(defmacro dir
+  "Prints a sorted directory of public vars in a namespace"
+  [nsname]
+  `(doseq [v# (dir-fn 'nsname)]
+    (println v#)))
+```
+
+Kullandığınız fonksiyonların dökümantasyon metinleri ve kaynak kodlarını incelemek iyi bir alışkanlık olur. Bizzat Clojure kütüphane fonksiyonlarının uygulamasını  *(implementation)* keşfetmek dili ve kullanımını öğrenmek için mükemmel bir yoldur.
+
+[Clojure Cheatsheet](https://clojure.org/api/cheatsheet)'in bir kopyasını açık bulundurmanız da faydalı olabilir. Bu belge standart kütüphane fonksiyonlarını kategorize eder ve iyi bir referanstır.
+
+### Clojure temelleri
