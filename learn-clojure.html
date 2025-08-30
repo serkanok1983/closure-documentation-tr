@@ -83,7 +83,8 @@ true false      ; booleans
     classDef vm    fill:#fff1d6,stroke:#b88,stroke-width:1px,color:#111;
     classDef eff   fill:#ffe6f5,stroke:#c06,stroke-width:3px,color:#111;
     classDef note  fill:transparent,stroke:transparent,color:#777,font-size:12px;
-</div><h4 id="clojureda-i̇şleme">Clojure'da İşleme </h4>
+</div><p>Java'da, kaynak kodu (.java uzantılı dosyalar) derleyici (javac) tarafından karakterler olarak okunur ve Java Sanal Makinesi (JVM) tarafından işlenebilen bytecode'a (.class uzantılı dosyalar) dönüştürülür.</p>
+<h4 id="clojureda-i̇şleme">Clojure'da İşleme </h4>
 <div class="mermaid">flowchart LR
     SC["Source Code"]:::plain
     R(["Reader"]):::reader
@@ -111,7 +112,14 @@ true false      ; booleans
     classDef eff    fill:#ffe6f5,stroke:#c06,stroke-width:3px,color:#111;
     classDef you    fill:#f3f3f3,stroke:#888,stroke-width:1px,color:#111;
     classDef note   fill:transparent,stroke:transparent,color:#777,font-size:12px;
-</div>
+</div><p>Clojure'da, kaynak kodu Okuyucu tarafından karakter karakter okunur. Okuyucu kaynağı .clj uzantılı dosyalardan yahut etkileşimli olarak <em>(interactively)</em> ifade serileri şeklinde okuyabilir. Okuyucu Clojure verisi üretir. Ardından Clojure derleyicisi JVM için bytecode'u üretir.</p>
+<p>Burada iki önemli nokta var:</p>
+<ol>
+<li>Kaynak kodunun ölçü birimi <strong>Clojure ifadesi</strong> olup, Clojure kaynak dosyası değildir. Kaynak dosyaları da REPL'de etkileşimli olarak girilmiş Clojure ifadelerinden farksız olarak ifade dizileri biçiminde okunur.</li>
+<li>Okuyucu ve Derleyiciyi bu şekilde ayırmak makrolara yer açan bir yaklaşımdır. Makrolar (veri olarak) kod alıp (veri olarak) kod üreten özel fonksiyonlardır. Yukarıdaki veri işleme modelinde makro genişlemesi için bir döngünün nereye eklenebileceğini fark ettiniz mi?</li>
+</ol>
+<h4 id="yapı-ve-anlam-structure-vs-semantics">Yapı ve Anlam <em>(Structure vs Semantics)</em> </h4>
+
       </div>
       
       

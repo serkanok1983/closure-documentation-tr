@@ -134,4 +134,13 @@ Burada iki önemli nokta var:
 2. Okuyucu ve Derleyiciyi bu şekilde ayırmak makrolara yer açan bir yaklaşımdır. Makrolar (veri olarak) kod alıp (veri olarak) kod üreten özel fonksiyonlardır. Yukarıdaki veri işleme modelinde makro genişlemesi için bir döngünün nereye eklenebileceğini fark ettiniz mi?
 
 #### Yapı ve Anlam *(Structure vs Semantics)*
- 
+
+Bir Clojure ifadesini ele alalım:
+
+![](clojure-expression.svg)
+
+Bu diyagram yeşil renkli sözdizimi (Okuyucu tarafından üretilen Closure veri yapısı) ve mavi renkli anlam (Closure çalışma zamanı *(runtime)* tarafından verinin nasıl anlaşıldığı) farkını göstermektedir.
+
+Çoğu yazılı Clojure formu kendilerini döndürürler, **semboller** ve **listeler** hariç. Semboller başka bir şeye atıf için kullanılır ve işlendiklerinde, atıfta bulundukları nesneyi döndürürler. Listeler (diyagramda olduğu gibi) çağrı *(invocation)* olarak işlenir.
+
+Diyagramda, (+ 3 4) ifadesi (+) sembolü ve iki sayıyı (3 ve 4) içeren bir liste olarak okunur. 
