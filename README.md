@@ -319,3 +319,66 @@ Kullandığınız fonksiyonların dökümantasyon metinleri ve kaynak kodların�
 [Clojure Cheatsheet](https://clojure.org/api/cheatsheet)'in bir kopyasını açık bulundurmanız da faydalı olabilir. Bu belge standart kütüphane fonksiyonlarını kategorize eder ve iyi bir referanstır.
 
 ### Clojure temelleri
+
+#### def
+
+REPL ortamında ifade işlerken, bir parça veriyi sonrası için kaydetmek faydalı olabilir. Bunu `def` ile yapabiliriz:
+
+```
+user=> (def x 7)
+#'user/x
+```
+
+`def` mevcut ad uzayında bir sembolü (x) bir değer (7) ile eşleyen bir özel formdur. Bu eşlemeye `var` denir. Uygulamada çoğu Clojure kodunda varlar sabit bir değer veya fonksiyona referans verir, ancak REPL'de çalışırken bir kolaylık olarak var tanımlamak ve yeniden tanımlamak yaygındır.
+
+Yukarıdaki dönüş değerinin `#'user/x` olduğuna dikkat edin - bu bir varın yazılı temsilidir: `#'` ardından ad uzayı ve sembol. `\user` varsayılan ad uzayıdır.
+
+Sembollerin neye referans verdiğine bakılarak işlendiğini hatırlayalım, sembolü kullanarak değeri döndürebiliriz:
+
+```
+user=> (+ x x)
+14
+```
+
+#### Yazdırmak
+
+Yeni bir programlama dili öğrenirken en çok yapılan şeylerden biri de değerleri yazdırmaktır. Clojure bunun için bazı fonksiyonlar sunar:
+
+|              | İnsanlar için | Veri olarak okunabilir |
+|--------------|---------------|------------------------|
+| Satır başı   | println       | prn                    |
+| Aynı satır   | print         | pr                     |
+
+İnsan-okuyabilir formlar özel yazım karakterlerini (satırbaşı ve sekme gibi) basılı formlarına çevirir ve metinlerdeki tırnak işaretlerini atlarlar. Fonksiyonlarda hata ayıklamak *(debug)* veya REPL'de bir değer yazdırmak için genellikle `println` kullanırız. `println` istenen sayıda argüman alır ve ekrana yazarken her bir argümanın arasına boşluk ekler.
+
+```
+user=> (println "What is this:" (+ 1 2))
+What is this: 3
+```
+
+println fonksiyonunun yan efektleri (yazdırma) vardır ve sonuç olarak nil döndürür.
+
+Yukarıdaki "What is this:"'in tırnak işaretsiz yazdırıldığına ve bu hali ile Okuyucunun veri olarak tekrar okuyabileceği bir metin olmadığına dikkat edin.
+
+Bu amaç doğrultusunda, veri olarak yazdırmak için prn kullanılır:
+
+```
+user=> (prn "one\n\ttwo")
+"one\n\ttwo"
+```
+
+Şimdi yazdırılan sonuç Okuyucu tarafından tekrar okunabilir formda. Bağlama göre, insan-okuyabilir formu veya veri formunu tercih edebilirsiniz.
+
+### Bilginizi sınayın
+
+1. REPL kullanarak, 7654 ile 1234 toplamını hesaplayınız.
+2. Cebirsel ifadeyi Clojure ifadesi olarak yazınız: ( 7 + 3 * 4 + 5 ) / 10.
+3. REPL dökümantasyon fonksiyonlarını kullanarak `rem` ve `mod` fonksiyonlarının dökümantasyonlarını bulunuz. Dökümantasyona dayalı olarak verilen ifadelerin sonuçlarını karşılaştırınız.
+4. `find-doc` kullanarak son REPL istisnasının *(exception)* yığın izini *(stack trace)* veren fonksiyonu bulunuz. 
+
+
+---
+
+
+## Fonksiyonlar
+
